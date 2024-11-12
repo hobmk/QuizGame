@@ -25,7 +25,7 @@ public class Socket_Client {
     public void clientStart() {
         serverIP = default_IP;
         serverPort = default_nport;
-        readFile("/input.txt");
+        readFile("src/input.txt");
         connectToServer();
     }
     private void readFile(String filename) {

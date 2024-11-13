@@ -3,12 +3,13 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.*;
 
 /* function
  * 1. serverStart : open welcome socket and wait accept client socket,
  *                  if accept client socket, create new socket to communicate with it
- * 2. communicateClient : send Question, accept answer, and feedback each answer (Correct or Incorrect)
+ * 2. ClientHandler : Implement Runable for supporting multi thread,
+ *                  send Question, accept answer, and feedback each answer (Correct or Incorrect)
  *                        if Quiz done, final score send
  * 3. createQuestions : create questions and answer with array list
  * 4. Array List QUESTIONS : store created questions
@@ -19,7 +20,9 @@ import java.util.Scanner;
 public class Socket_Server {
     private static final List<Question> QUESTIONS = createQuestions();
     private static final int PORT = 1234;
+    private static final ExecutorService threadPool = Executors.newFixedThreadPool(5);
     public static void main(String[] args) {
+
         new Socket_Server().serverStart(PORT);
 
     }
@@ -32,7 +35,7 @@ public class Socket_Server {
                     Socket connecionSocket = welcomeSocket.accept();
                     System.out.println("Successful connection to client: " + connecionSocket.getInetAddress());
 
-                    new Socket_Server().communicateClient(connecionSocket);
+                    threadPool.execute(new ClientHandler(connecionSocket));
 
                 } catch (IOException e) {
                     System.out.println("Client error : " + e.getMessage());
@@ -43,35 +46,47 @@ public class Socket_Server {
         }
     }
 
-    private void communicateClient(Socket connectionSocket) {
-        try(Socket socket = connectionSocket;
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))){
-            int score = 0;
+    private static class ClientHandler implements Runnable {
+        private Socket connectionSocket;
 
-            Collections.shuffle(QUESTIONS);
+        public ClientHandler(Socket connectionSocket) {
+            this.connectionSocket = connectionSocket;
+        }
 
-            for (int i = 0; i < 5; i++) {
-                Question question = QUESTIONS.get(i);
-                out.println(question.getQuestion());
-                String answer = in.readLine();
+        @Override
+        public void run(){
 
-                if (answer != null && answer.equalsIgnoreCase(question.getAnswer())) {
-                    out.println("Correct");
-                    score = score + 20;
-                } else {
-                    out.println("Incorrect");
+            try(Socket socket = connectionSocket;
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))){
+                int score = 0;
+
+                Collections.shuffle(QUESTIONS);
+
+                for (int i = 0; i < 5; i++) {
+                    Question question = QUESTIONS.get(i);
+                    out.println(question.getQuestion());
+                    String answer = in.readLine();
+
+                    if (answer != null && answer.equalsIgnoreCase(question.getAnswer())) {
+                        out.println("Correct");
+                        score += 20;
+                    } else {
+                        out.println("Incorrect");
+                    }
                 }
+                out.println("Quiz complete.");
+                out.println("Your final score : " + score);
+
+                System.out.println("Sending final score to client. score : " + score);
+
+            } catch (IOException e){
+                System.out.println("Client error : " + e.getMessage());
             }
-            out.println("Quiz complete.");
-            out.println("Your final score : " + score);
 
-            System.out.println("Sending final score to client. score : " + score);
-
-        } catch (IOException e){
-            System.out.println("Client error : " + e.getMessage());
         }
     }
+
 
     private static class Question {
         private String question;

@@ -77,7 +77,7 @@ public class Socket_Server {
                     }
                 }
                 out.println("COMPLETE:Quiz complete.");
-                out.println("SCORE:Your final score : " + score);
+                out.println("SCORE:Your Final Score : " + score);
 
                 System.out.println("Sending final score to client. score : " + score);
 
@@ -107,11 +107,11 @@ public class Socket_Server {
     }
     private static List<Question> createQuestions(){
         List<Question> questions = new ArrayList<>();
-        questions.add(new Question("q1","a1"));
-        questions.add(new Question("q2", "a2"));
-        questions.add(new Question("q3", "a3"));
-        questions.add(new Question("q4", "a4"));
-        questions.add(new Question("q5", "a5"));
+        questions.add(new Question("What is the capital of South Korea?","Seoul"));
+        questions.add(new Question("What do you call the seven-colored arc that appears in the sky after rain?", "Rainbow"));
+        questions.add(new Question("What is the capital of France?", "Paris"));
+        questions.add(new Question("What is the largest land animal in the world?", "Elephant"));
+        questions.add(new Question("What is an object used for sitting that is often paired with a desk?", "Chair"));
 
         return questions;
     }

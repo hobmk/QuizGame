@@ -8,14 +8,15 @@ import java.util.concurrent.*;
 /* function
  * 1. serverStart : open welcome socket and wait accept client socket,
  *                  if accept client socket, create new socket to communicate with it
- * 2. ClientHandler : Implement Runable for supporting multi thread,
- *                  send Question, accept answer, and feedback each answer (Correct or Incorrect)
+ * 2. run : send Question, accept answer, and feedback each answer (Correct or Incorrect)
  *                        if Quiz done, final score send
  * 3. createQuestions : create questions and answer with array list
  * 4. Array List QUESTIONS : store created questions
  *
  * class
  * 1. Question : use getQuestion and getAnswer methods
+ * 2. ClientHandler : Implement Runnable for supporting multi thread
+ *
  * */
 public class Socket_Server {
     private static final List<Question> QUESTIONS = createQuestions();
@@ -65,18 +66,18 @@ public class Socket_Server {
 
                 for (int i = 0; i < 5; i++) {
                     Question question = QUESTIONS.get(i);
-                    out.println(question.getQuestion());
+                    out.println("QUESTION:" + question.getQuestion());
                     String answer = in.readLine();
 
                     if (answer != null && answer.equalsIgnoreCase(question.getAnswer())) {
-                        out.println("Correct");
+                        out.println("FEEDBACK:Correct");
                         score += 20;
                     } else {
-                        out.println("Incorrect");
+                        out.println("FEEDBACK:Incorrect");
                     }
                 }
-                out.println("Quiz complete.");
-                out.println("Your final score : " + score);
+                out.println("COMPLETE:Quiz complete.");
+                out.println("SCORE:Your final score : " + score);
 
                 System.out.println("Sending final score to client. score : " + score);
 

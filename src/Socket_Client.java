@@ -8,8 +8,10 @@ import java.net.*;
 * 3. connectToServer : connect to server, and receive quiz and send answer
 *                   each quiz feedback from server and when quiz done,
 *                    receive final score from server and display it
+* 4. sendAnswer : send answer to server
+* 5. receivingMessage : read buffer
+* 6. closeConnection : close connect socket, PrintWriter, BufferedReader
 *
-
 * */
 public class Socket_Client {
 
@@ -18,14 +20,14 @@ public class Socket_Client {
     private static final int default_nport = 1234;
     private String serverIP;
     private int serverPort;
-    public static void main(String[] args) {
-        new Socket_Client().clientStart();
-    }
+    private PrintWriter out;
+    private BufferedReader in;
+    Socket socket;
 
-    public void clientStart() {
+    public void clientStart(String filename) {
         serverIP = default_IP;
         serverPort = default_nport;
-        readFile("src/input.txt");
+        readFile(filename);
         connectToServer();
     }
     private void readFile(String filename) {
@@ -49,35 +51,47 @@ public class Socket_Client {
         }
     }
 
-    private void connectToServer() {
-        try (Socket socket = new Socket(serverIP, serverPort);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in))) {
+    public void connectToServer() {
+        try {
+            Socket socket = new Socket(serverIP, serverPort);
+             out = new PrintWriter(socket.getOutputStream(), true);
+             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             System.out.println("Connect to server (" + serverIP + ", " + serverPort + ")");
 
-            String serverMessage;
-            while ((serverMessage = in.readLine()) != null) {
-                if (serverMessage.equals("Quiz complete.")) {
-                    System.out.println(serverMessage);
-
-                    String score = in.readLine();
-                    System.out.println(score);
-                    break;
-                }
-                System.out.println("Question: " + serverMessage);
-
-                System.out.print("Your answer: ");
-                String answer = userInput.readLine();
-                out.println(answer);
-
-                String feedback = in.readLine();
-                System.out.println("Feedback: " + feedback);
-            }
-
         } catch (IOException e) {
             System.out.println("Client error : " + e.getMessage());
+        }
+    }
+    public void sendAnswer(String answer) {
+        if (out != null) {
+            out.println(answer);
+        }
+    }
+
+    public String receiveMessage() {
+        try {
+            if (in != null) {
+                return in.readLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error receiving message: " + e.getMessage());
+        }
+        return null;
+    }
+    public void closeConnection() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+        } catch (IOException e) {
+            System.out.println("Error closing connection: " + e.getMessage());
         }
     }
 

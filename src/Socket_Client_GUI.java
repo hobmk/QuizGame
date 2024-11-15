@@ -5,7 +5,7 @@ import java.awt.*;
 * function
 * 1. connectToServer : invoke clientStart and start receive message with thread
 * 2. receiveMessage : process the message and display user
-* 3. sendAnswer : send nswer entered answerField
+* 3. sendAnswer : send answer entered answerField
 *
 * content
 * 1. questionArea : display question received by server

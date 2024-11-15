@@ -37,7 +37,7 @@ public class Socket_Client {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                System.out.println("Reading line: " + line); // 각 줄을 출력하여 확인
+                System.out.println("Reading line: " + line); // print line
                 line = line.toUpperCase(); // case insensitive
                 if (line.startsWith("IP:")) {
                     serverIP = line.split(":")[1].trim();

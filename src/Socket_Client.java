@@ -47,7 +47,7 @@ public class Socket_Client {
             }
             System.out.println("Successfully read IP and port from input.txt: " + serverIP + ", " + serverPort);
         } catch (IOException | NumberFormatException e) {
-            System.out.println("Using default IP and port number (localhost and 1234)");
+            System.out.println("202:File can't read, Using default IP and port number (localhost and 1234)");
         }
     }
 
@@ -60,7 +60,7 @@ public class Socket_Client {
             System.out.println("Connect to server (" + serverIP + ", " + serverPort + ")");
 
         } catch (IOException e) {
-            System.out.println("Client error : " + e.getMessage());
+            System.out.println("203:Client error : " + e.getMessage());
         }
     }
     public void sendAnswer(String answer) {
@@ -75,7 +75,7 @@ public class Socket_Client {
                 return in.readLine();
             }
         } catch (IOException e) {
-            System.out.println("Error receiving message: " + e.getMessage());
+            System.out.println("204:Error receiving message: " + e.getMessage());
         }
         return null;
     }
@@ -91,7 +91,7 @@ public class Socket_Client {
                 out.close();
             }
         } catch (IOException e) {
-            System.out.println("Error closing connection: " + e.getMessage());
+            System.out.println("206:Error closing connection: " + e.getMessage());
         }
     }
 

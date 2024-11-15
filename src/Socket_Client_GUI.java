@@ -31,7 +31,7 @@ public class Socket_Client_GUI extends JFrame {
     public Socket_Client_GUI() {
         client = new Socket_Client();
         setTitle("Quiz Game!");
-        setSize(1000, 800);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Main Layout
@@ -65,7 +65,7 @@ public class Socket_Client_GUI extends JFrame {
         questionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         questionPanel.add(scrollPane, BorderLayout.CENTER);
-        questionPanel.setBorder(BorderFactory.createEmptyBorder(300, 200, 200, 200));
+        questionPanel.setBorder(BorderFactory.createEmptyBorder(200, 150, 200, 150));
 
 
         // Input Panel
@@ -108,7 +108,7 @@ public class Socket_Client_GUI extends JFrame {
         connectButton.addActionListener(e -> {
             connectToServer();
             background.remove(connectPanel);
-            setSize(1000,800);
+            setSize(800,600);
             background.add(questionPanel, BorderLayout.CENTER);
             background.add(statusPanel, BorderLayout.NORTH);
             background.add(inputPanel, BorderLayout.SOUTH);
@@ -159,7 +159,7 @@ public class Socket_Client_GUI extends JFrame {
                 }
             }
         } catch (Exception e) {
-            feedbackLabel.setText("Error receiving messages: " + e.getMessage());
+            feedbackLabel.setText("204:Error receiving messages: " + e.getMessage());
         }
     }
 
@@ -170,7 +170,7 @@ public class Socket_Client_GUI extends JFrame {
             answerField.setText("");    // After sending answer, Make answer field blank
 
         } catch (Exception e) {
-            feedbackLabel.setText("Error sending answer: " + e.getMessage());
+            feedbackLabel.setText("205:Error sending answer: " + e.getMessage());
         }
     }
 

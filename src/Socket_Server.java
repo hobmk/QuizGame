@@ -39,11 +39,11 @@ public class Socket_Server {
                     threadPool.execute(new ClientHandler(connecionSocket));
 
                 } catch (IOException e) {
-                    System.out.println("Client error : " + e.getMessage());
+                    System.out.println("201:Client error : " + e.getMessage());
                 }
             }
         } catch (IOException e) {
-            System.out.println("Server error : " + e.getMessage());
+            System.out.println("101:Server error : " + e.getMessage());
         }
     }
 
@@ -82,7 +82,7 @@ public class Socket_Server {
                 System.out.println("Sending final score to client. score : " + score);
 
             } catch (IOException e){
-                System.out.println("Client error : " + e.getMessage());
+                System.out.println("301:Client error : " + e.getMessage());
             }
 
         }
